@@ -1,0 +1,25 @@
+import { createContext, useContext, useState } from "react";
+
+const ThemeContext = createContext(undefined);
+
+export const ThemeProvider = ({ children }) => {
+    const [theme, setTheme] = useState("light");
+
+    return (
+        <ThemeContext.Provider
+        value={{
+            theme,
+            toggleTheme: () => setTheme(theme === "light" ? "dark" : "light"),
+        }}
+        >
+        {children}
+        </ThemeContext.Provider>
+    );
+};
+
+export const useTheme = () => useContext(ThemeContext);
+
+/*
+you can use 'useTheme()' in other components to save in a const variable the information from the 
+ThemeContext. After that, you can dinamically render the page according to this
+*/
