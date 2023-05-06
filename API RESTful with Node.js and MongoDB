@@ -1,0 +1,77 @@
+const express = require('express'); //Back-End Framework for creating APIs with Node.js
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');//Back-End Framework for querying a MongoDB database with Node.js
+
+const app = express();
+const port = 3000;
+
+// Middleware
+app.use(bodyParser.json());
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost/mydatabase', { useNewUrlParser: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
+
+// Define a product schema
+const ProductSchema = new mongoose.Schema({
+  name: String,
+  price: Number
+});
+
+// Create a product model from the schema
+const Product = mongoose.model('Product', ProductSchema);
+
+// Routes
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
+    //Route for retrieving all products from the DB
+app.get('/api/products', (req, res) => {
+  Product.find((err, products) => {
+    if (err) {
+      res.status(500).send('Error retrieving products from database');
+    } else {
+      res.json(products);
+    }
+  });
+});
+    //Route for retrieving a product by id from the DB
+app.get('/api/products/:id', (req, res) => {
+  Product.findById(req.params.id, (err, product) => {
+    if (err) {
+      res.status(500).send('Error retrieving product from database');
+    } else if (!product) {
+      res.status(404).send('Product not found');
+    } else {
+      res.json(product);
+    }
+  });
+});
+    //Route for creating a new product in the DB
+app.post('/api/products', (req, res) => {
+  const product = new Product(req.body);
+  product.save(err => {
+    if (err) {
+      res.status(500).send('Error adding product to database');
+    } else {
+      res.send('Product added successfully');
+    }
+  });
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
+
+/*
+In this example, we're using the mongoose library to connect to a MongoDB database running on the local machine. We define a ProductSchema schema and use it 
+to create a Product model. We then modify the API routes to use the Product model to retrieve or update data in the database.
+
+For example, the GET /api/products route retrieves all products from the database using the Product.find method. Similarly, the GET /api/products/:id route 
+retrieves a single product with the specified ID using the Product.findById method.
+
+The POST /api/products route creates a new Product instance from the request body and saves it to the database using the product.save method. If there's an 
+error, the server responds with a 500 status code and an error message.
+*/
