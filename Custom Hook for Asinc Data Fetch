@@ -25,4 +25,5 @@ function useFetch(url) {
 
 /*
 A custom hook is pretty much a 'function' (piece of logic) that becomes available anywhere in an app
+It must always at least one built-in hook
 */
