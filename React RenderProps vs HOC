@@ -133,3 +133,7 @@ function App() {
 }
 
 export default App;
+
+/*
+Render Props add data to components with functions, while HOC add data to components as props.
+*/
