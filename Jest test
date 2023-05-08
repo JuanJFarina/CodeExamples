@@ -40,3 +40,7 @@ describe("Feedback Form", () => {
     });
   });
 });
+
+/*
+These tests can be run by typing in the terminal 'npm test'
+*/
